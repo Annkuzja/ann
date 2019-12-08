@@ -17,4 +17,8 @@ public class RouteVOServiceImpl implements RouteVOService {
     public List<RouteVO> getFullList() throws Exception {
         return routeVODao.getList();
     }
+
+    public List<RouteVO> findRoutes(String source, String destination) throws Exception {
+        return routeVODao.findRoute(source, destination);
+    }
 }

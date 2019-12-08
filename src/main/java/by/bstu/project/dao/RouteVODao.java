@@ -7,4 +7,5 @@ import java.util.List;
 public interface RouteVODao {
     RouteVO getEntity(Integer id) throws Exception;
     List<RouteVO> getList() throws Exception;
+    List<RouteVO> findRoute(String source, String destination) throws Exception;
 }

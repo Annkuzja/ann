@@ -42,7 +42,8 @@ public class PdfWrite {
                 "Driver FirstName: " + routeVO.getDriverId().toString() + "\n" + "Driver name " + routeVO.getDriverName() + "\n" +
                 "Driver surname : " + routeVO.getDriverSurname() + "\n" + "Bus id " + routeVO.getBusId().toString() + "\n" +
                 "Bus mark " + routeVO.getMarkOfBus() + "\n" + "Bus horse power: " + routeVO.getHorsePower().toString() + "\n" + "Bus num of passenger: " +
-                routeVO.getNumberOfPassenger() + "\n" + "Route Source: " + routeVO.getSource() + "\n" + "Route Destination: " + routeVO.getDestination() + "\n\n";
+                routeVO.getNumberOfPassenger() + "\n" + "Route Source: " + routeVO.getSource() + "\n" + "Route Destination: " + routeVO.getDestination()
+                + "\n" + "Route ArrivalTime: " + routeVO.getArrivalTime().toString() + "\n" + "Route DepartureTime: " + routeVO.getDepartureTime().toString() + "\n\n";
     }
 
 }

@@ -23,11 +23,13 @@ public class RouteDaoImpl implements RouteDao {
     }
 
     public Route insert(Route route) throws Exception {
-        PreparedStatement statement = getCreateStatement("INSERT INTO route(bus_id, driver_id, destination, source) VALUES(?, ?, ?, ?)", "id");
+        PreparedStatement statement = getCreateStatement("INSERT INTO route(bus_id, driver_id, destination, source, departure_time, arrival_time) VALUES(?, ?, ?, ?, ?, ?)", "id");
         statement.setInt(1, route.getBusId());
         statement.setInt(2, route.getDriverId());
         statement.setString(3, route.getDestination());
         statement.setString(4, route.getSource());
+        statement.setDate(5, java.sql.Date.valueOf(route.getDepartureTime()));
+        statement.setDate(6, java.sql.Date.valueOf(route.getArrivalTime()));
 
         if (statement.executeUpdate() > 0) {
             ResultSet generatedKeys = statement.getGeneratedKeys();
@@ -60,6 +62,8 @@ public class RouteDaoImpl implements RouteDao {
         route.setBusId(resultSet.getInt("bus_id"));
         route.setDestination(resultSet.getString("destination"));
         route.setSource(resultSet.getString("source"));
+        route.setArrivalTime(resultSet.getDate("arrival_time").toLocalDate());
+        route.setDepartureTime(resultSet.getDate("departure_time").toLocalDate());
         return route;
     }
 
@@ -74,6 +78,8 @@ public class RouteDaoImpl implements RouteDao {
             route.setBusId(resultSet.getInt("bus_id"));
             route.setDestination(resultSet.getString("destination"));
             route.setSource(resultSet.getString("source"));
+            route.setArrivalTime(resultSet.getDate("arrival_time").toLocalDate());
+            route.setDepartureTime(resultSet.getDate("departure_time").toLocalDate());
             routes.add(route);
         }
         return routes;
@@ -106,12 +112,15 @@ public class RouteDaoImpl implements RouteDao {
     }
 
     public int update(Route route) throws Exception {
-        PreparedStatement statement = createStatement("UPDATE route set route.bus_id = ?, route.driver_id = ?, route.destination = ?, route.source = ? where id = ?");
+        PreparedStatement statement = createStatement("UPDATE route set route.bus_id = ?, route.driver_id = ?, route.destination = ?, route.source = ?, route.departure_time = ?, route.arrival_time = ? where id = ?");
         statement.setInt(1, route.getBusId());
         statement.setInt(2, route.getDriverId());
         statement.setString(3, route.getDestination());
         statement.setString(4, route.getSource());
-        statement.setInt(5, route.getId());
+        statement.setDate(5, java.sql.Date.valueOf(route.getDepartureTime()));
+        statement.setDate(6, java.sql.Date.valueOf(route.getArrivalTime()));
+        statement.setInt(7, route.getId());
+
         return statement.executeUpdate();
     }
 

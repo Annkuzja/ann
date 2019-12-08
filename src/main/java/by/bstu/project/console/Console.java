@@ -7,6 +7,7 @@ import by.bstu.project.entity.RouteVO;
 import by.bstu.project.file.PdfWrite;
 import by.bstu.project.service.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -159,16 +160,22 @@ public class Console {
                     String destination = inputName();
                     System.out.println("Please, enter source");
                     String source = inputName();
+                    System.out.println("Enter a departure time");
+                    LocalDate departureTime = inputDate();
+                    System.out.println("Enter a arrival time");
+                    LocalDate arrivalTime = inputDate();
 
                     Route route = new Route();
                     route.setBusId(busId);
                     route.setDriverId(driverId);
                     route.setDestination(destination);
                     route.setSource(source);
+                    route.setDepartureTime(departureTime);
+                    route.setArrivalTime(arrivalTime);
 
                     if (routeService.insert(route) == null)
                         System.out.println("Route is already in DataBase");
-                    else System.out.println("Bus was successfully added with id " + route.getId());
+                    else System.out.println("Route was successfully added with id " + route.getId());
                     System.out.println("Please, choose the next action");
                     item = inputInteger();
                     break;
@@ -290,7 +297,7 @@ public class Console {
                         break;
                     }
 
-                    outputDrivers();
+                    outputBuses();
 
                     scanner.nextLine();
                     System.out.println("Please, enter a BusId");
@@ -309,16 +316,42 @@ public class Console {
                     System.out.println("Please, enter source");
                     String source = inputName();
 
+                    System.out.println("Enter a departure time");
+                    LocalDate departureTime = inputDate();
+                    System.out.println("Enter a arrival time");
+                    LocalDate arrivalTime = inputDate();
+
                     Route route = new Route();
                     route.setId(id);
                     route.setBusId(busId);
                     route.setDriverId(driverId);
                     route.setDestination(destination);
                     route.setSource(source);
+                    route.setDepartureTime(departureTime);
+                    route.setArrivalTime(arrivalTime);
 
                     if (routeService.update(route) == 1)
                         System.out.println("Route was updated");
                     else System.out.println("Something goes wrong or route id is incorrect");
+                    System.out.println("Please, choose the next action");
+                    item = inputInteger();
+                    break;
+                }
+
+                case 15: {
+                    scanner.nextLine();
+                    System.out.println("Enter source");
+                    String source = inputName();
+                    System.out.println("Input destination");
+                    String destination = inputName();
+                    List<RouteVO> routeVOList = routeVOService.findRoutes(source, destination);
+                    if (routeVOList == null)
+                        System.out.println("There is no routes with such criteria");
+                    else {
+                        for (RouteVO routeVO : routeVOList) {
+                            System.out.println(routeVO.toString());
+                        }
+                    }
                     System.out.println("Please, choose the next action");
                     item = inputInteger();
                     break;
@@ -349,7 +382,7 @@ public class Console {
             System.out.println("Bus:" + bus.toString() + "\n");
     }
 
-    public static String inputName() {
+    private static String inputName() {
 
         String name = scanner.nextLine();
         while (name.length() == 0) {
@@ -360,7 +393,7 @@ public class Console {
         return name;
     }
 
-    public static Integer inputInteger() {
+    private static Integer inputInteger() {
         Integer Id;
         do {
             while (!scanner.hasNextInt()) {
@@ -370,6 +403,41 @@ public class Console {
             Id = scanner.nextInt();
         } while (Id < 0);
         return Id;
+    }
+
+    private LocalDate inputDate() {
+        Scanner scanner = new Scanner(System.in);
+        LocalDate date = LocalDate.now();
+        String yearS, monthS, dayOfMontshS;
+        System.out.println("Enter year ");
+        yearS = scanner.nextLine();
+        while (!errorCheckForNumber(yearS) || (Integer.parseInt(yearS) < date.getYear())) {
+            System.out.println("Error,please enter another year");
+            yearS = scanner.nextLine();
+        }
+        int year = Integer.parseInt(yearS);
+        System.out.println("Enter month (1-12)");
+        monthS = scanner.nextLine();
+        while (!errorCheckForNumber(monthS) || ((year == date.getYear()) && (Integer.parseInt(monthS) < date.getMonthValue()))
+                || Integer.parseInt(monthS) < 1 || Integer.parseInt(monthS) > 12) {
+            System.out.println("Error,please enter another month");
+            monthS = scanner.nextLine();
+        }
+        int month = Integer.parseInt(monthS);
+        System.out.println("Enter month of (1-31)");
+        dayOfMontshS = scanner.nextLine();
+        while (!errorCheckForNumber(dayOfMontshS) || (year == date.getYear() && month == date.getMonthValue() && Integer.parseInt(dayOfMontshS)
+                < date.getDayOfMonth()) || Integer.parseInt(dayOfMontshS) < 1 || Integer.parseInt(dayOfMontshS) > 31) {
+            System.out.println("Error,please enter another day");
+            dayOfMontshS = scanner.nextLine();
+        }
+        int dayOfMonth = Integer.parseInt(dayOfMontshS);
+        date = LocalDate.of(year, month, dayOfMonth);
+        return date;
+    }
+
+    private boolean errorCheckForNumber(String date) {
+        return date.chars().allMatch(Character::isDigit) && !date.isEmpty();
     }
 
     private static void printout() {
@@ -388,6 +456,7 @@ public class Console {
                 + "12 - Update bus info\n"
                 + "13 - Update driver info\n"
                 + "14 - Update route info\n"
+                + "15 - Find route\n"
                 + "press 0 for exit\n\n"
                 + "AFTER CHOOSING AN OPTION PLEASE PRESS ENTER");
     }
