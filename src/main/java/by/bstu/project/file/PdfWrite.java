@@ -44,6 +44,9 @@ public class PdfWrite {
                 "Bus mark " + routeVO.getMarkOfBus() + "\n" + "Bus horse power: " + routeVO.getHorsePower().toString() + "\n" + "Bus num of passenger: " +
                 routeVO.getNumberOfPassenger() + "\n" + "Route Source: " + routeVO.getSource() + "\n" + "Route Destination: " + routeVO.getDestination() + "\n\n";
     }
+    private static void test (){
+        
+    }
 }
 
 
