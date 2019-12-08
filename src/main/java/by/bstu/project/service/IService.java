@@ -9,6 +9,8 @@ public interface IService<T> {
 
     T getEntity(Integer id) throws Exception;
 
+    int update(T entity) throws Exception;
+
     List<T> getEntityList() throws Exception;
 
     Integer getSize() throws Exception;

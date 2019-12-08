@@ -98,6 +98,14 @@ public class DriverDaoImpl implements DriverDao {
         return driver;
     }
 
+    public int update(Driver driver) throws Exception {
+        PreparedStatement statement = createStatement("UPDATE drivers set drivers.name = ?, drivers.surname = ? where id = ?");
+        statement.setString(1, driver.getName());
+        statement.setString(2, driver.getSurname());
+        statement.setInt(3, driver.getId());
+        return statement.executeUpdate();
+    }
+
     private PreparedStatement getCreateStatement(String sql, String idFieldName) throws SQLException {
         return getConnection().prepareStatement(sql, new String[]{idFieldName});
     }

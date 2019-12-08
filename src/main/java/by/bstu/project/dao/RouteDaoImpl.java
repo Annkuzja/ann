@@ -105,6 +105,16 @@ public class RouteDaoImpl implements RouteDao {
         return route;
     }
 
+    public int update(Route route) throws Exception {
+        PreparedStatement statement = createStatement("UPDATE route set route.bus_id = ?, route.driver_id = ?, route.destination = ?, route.source = ? where id = ?");
+        statement.setInt(1, route.getBusId());
+        statement.setInt(2, route.getDriverId());
+        statement.setString(3, route.getDestination());
+        statement.setString(4, route.getSource());
+        statement.setInt(5, route.getId());
+        return statement.executeUpdate();
+    }
+
     private PreparedStatement getCreateStatement(String sql, String idFieldName) throws SQLException {
         return getConnection().prepareStatement(sql, new String[]{idFieldName});
     }

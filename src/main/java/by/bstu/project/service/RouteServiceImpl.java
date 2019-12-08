@@ -32,4 +32,8 @@ public class RouteServiceImpl implements RouteService {
     public Integer getSize() throws Exception {
         return routeDao.getSize();
     }
+
+    public int update(Route route) throws Exception {
+        return routeDao.update(route);
+    }
 }

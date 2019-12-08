@@ -4,6 +4,7 @@ import by.bstu.project.entity.Bus;
 import by.bstu.project.entity.Driver;
 import by.bstu.project.entity.Route;
 import by.bstu.project.entity.RouteVO;
+import by.bstu.project.file.PdfWrite;
 import by.bstu.project.service.*;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class Console {
     private DriverService driverService = new DriverServiceImpl();
     private RouteService routeService = new RouteServiceImpl();
     private RouteVOService routeVOService = new RouteVOServiceImpl();
-    private FileService fileService = new FileService();
+    private PdfWrite pdfWrite = new PdfWrite();
 
     private static Scanner scanner = new Scanner(System.in);
 
@@ -53,9 +54,7 @@ public class Console {
                     if (busService.getSize() == 0)
                         System.out.println("DataBase is empty");
                     else {
-                        List<Bus> listOfBuses = busService.getEntityList();
-                        for (Bus bus : listOfBuses)
-                            System.out.println("Bus:" + bus.toString() + "\n");
+                        outputBuses();
                     }
                     scanner.nextLine();
                     System.out.println("Enter BusId of bus to delete");
@@ -75,9 +74,7 @@ public class Console {
                     if (busService.getSize() == 0)
                         System.out.println("DataBase is empty");
                     else {
-                        List<Bus> listOfBuses = busService.getEntityList();
-                        for (Bus bus : listOfBuses)
-                            System.out.println("Bus:" + bus.toString() + "\n");
+                        outputBuses();
                     }
                     System.out.println("\nPlease, choose the next action");
                     item = inputInteger();
@@ -105,9 +102,7 @@ public class Console {
                     if (driverService.getSize() == 0)
                         System.out.println("DataBase is empty");
                     else {
-                        List<Driver> listOfDrivers = driverService.getEntityList();
-                        for (Driver driver : listOfDrivers)
-                            System.out.println(driver.toString() + "\n");
+                        outputDrivers();
                     }
                     scanner.nextLine();
                     System.out.println("Enter DriverId of bus to delete");
@@ -127,9 +122,7 @@ public class Console {
                     if (driverService.getSize() == 0)
                         System.out.println("DataBase is empty");
                     else {
-                        List<Driver> listOfDrivers = driverService.getEntityList();
-                        for (Driver driver : listOfDrivers)
-                            System.out.println(driver.toString() + "\n");
+                        outputDrivers();
                     }
                     System.out.println("\nPlease, choose the next action");
                     item = inputInteger();
@@ -137,6 +130,7 @@ public class Console {
                 }
 
                 case 7: {
+                    outputDrivers();
                     scanner.nextLine();
                     System.out.println("Please, enter a DriverId");
                     Integer driverId = inputInteger();
@@ -148,6 +142,7 @@ public class Console {
                         break;
                     }
 
+                    outputBuses();
                     scanner.nextLine();
                     System.out.println("Please, enter a BusId");
                     Integer busId = inputInteger();
@@ -199,9 +194,7 @@ public class Console {
                     if (routeService.getSize() == 0)
                         System.out.println("DataBase is empty");
                     else {
-                        List<Route> listOfRoute = routeService.getEntityList();
-                        for (Route route : listOfRoute)
-                            System.out.println(route.toString() + "\n");
+                        outputRoutes();
                     }
                     System.out.println("\nPlease, choose the next action");
                     item = inputInteger();
@@ -223,7 +216,109 @@ public class Console {
                 }
 
                 case 11: {
-                    fileService.writeInFile();
+                    List<RouteVO> routeVOList = routeVOService.getFullList();
+                    scanner.nextLine();
+                    System.out.println("Please, enter a fileName");
+                    String fileName = inputName();
+                    pdfWrite.write(fileName, routeVOList);
+                    System.out.println("Please, choose the next action");
+                    item = inputInteger();
+                    break;
+                }
+
+                case 12: {
+                    outputBuses();
+                    System.out.println("Choose bus id to update");
+                    scanner.nextLine();
+                    Integer busId = inputInteger();
+                    scanner.nextLine();
+                    System.out.println("Please, enter a Mark of Bus");
+                    String mark = inputName();
+                    System.out.println("Please, enter a horse power");
+                    Integer horsePower = inputInteger();
+                    scanner.nextLine();
+                    System.out.println("Please, enter a max number of passengers");
+                    Integer numOfPassengers = inputInteger();
+                    Bus bus = new Bus();
+                    bus.setId(busId);
+                    bus.setMark(mark);
+                    bus.setHorsePower(horsePower);
+                    bus.setNumberOfPassenger(numOfPassengers);
+                    if (busService.update(bus) == 1)
+                        System.out.println("Bus info was updated successfully");
+                    else System.out.println("Something goes wrong or bus id is incorrect");
+                    System.out.println("Please, choose the next action");
+                    item = inputInteger();
+                    break;
+                }
+                case 13: {
+                    outputDrivers();
+                    scanner.nextLine();
+                    Integer id = inputInteger();
+                    scanner.nextLine();
+                    System.out.println("Please, enter a name of Driver");
+                    String name = inputName();
+                    System.out.println("Please, enter Surname");
+                    String surname = inputName();
+                    Driver driver = new Driver();
+                    driver.setId(id);
+                    driver.setName(name);
+                    driver.setSurname(surname);
+                    if (driverService.update(driver) == 1)
+                        System.out.println("Driver info was updated successfully");
+                    else System.out.println("Something goes wrong or bus id is incorrect");
+                    System.out.println("Please, choose the next action");
+                    item = inputInteger();
+                    break;
+                }
+
+                case 14: {
+                    outputRoutes();
+                    System.out.println("Enter number of route to update");
+                    scanner.nextLine();
+                    Integer id = inputInteger();
+
+                    outputDrivers();
+
+                    System.out.println("Please, enter a DriverId");
+                    Integer driverId = inputInteger();
+
+                    if (driverService.getEntity(driverId) == null) {
+                        System.out.println("There isn't driver with this id\n");
+                        System.out.println("Please, choose the next action");
+                        item = inputInteger();
+                        break;
+                    }
+
+                    outputDrivers();
+
+                    scanner.nextLine();
+                    System.out.println("Please, enter a BusId");
+                    Integer busId = inputInteger();
+
+                    if (busService.getEntity(busId) == null) {
+                        System.out.println("There isn't bus with this id\n");
+                        System.out.println("Please, choose the next action");
+                        item = inputInteger();
+                        break;
+                    }
+
+                    scanner.nextLine();
+                    System.out.println("Please, enter destination");
+                    String destination = inputName();
+                    System.out.println("Please, enter source");
+                    String source = inputName();
+
+                    Route route = new Route();
+                    route.setId(id);
+                    route.setBusId(busId);
+                    route.setDriverId(driverId);
+                    route.setDestination(destination);
+                    route.setSource(source);
+
+                    if (routeService.update(route) == 1)
+                        System.out.println("Route was updated");
+                    else System.out.println("Something goes wrong or route id is incorrect");
                     System.out.println("Please, choose the next action");
                     item = inputInteger();
                     break;
@@ -234,6 +329,24 @@ public class Console {
             }
 
         }
+    }
+
+    private void outputDrivers() throws Exception {
+        List<Driver> listOfDrivers = driverService.getEntityList();
+        for (Driver driver : listOfDrivers)
+            System.out.println(driver.toString() + "\n");
+    }
+
+    private void outputRoutes() throws Exception {
+        List<Route> listOfRoute = routeService.getEntityList();
+        for (Route route : listOfRoute)
+            System.out.println(route.toString() + "\n");
+    }
+
+    private void outputBuses() throws Exception {
+        List<Bus> listOfBuses = busService.getEntityList();
+        for (Bus bus : listOfBuses)
+            System.out.println("Bus:" + bus.toString() + "\n");
     }
 
     public static String inputName() {
@@ -272,6 +385,9 @@ public class Console {
                 + "9 - Show list of Routes\n"
                 + "10 - Get info by route number\n"
                 + "11 - Write info in file\n"
+                + "12 - Update bus info\n"
+                + "13 - Update driver info\n"
+                + "14 - Update route info\n"
                 + "press 0 for exit\n\n"
                 + "AFTER CHOOSING AN OPTION PLEASE PRESS ENTER");
     }

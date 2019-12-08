@@ -104,6 +104,15 @@ public class BusDaoImpl implements BusDao {
         return bus;
     }
 
+    public int update(Bus bus) throws Exception {
+        PreparedStatement statement = createStatement("UPDATE bus set bus.name = ?, bus.horse_power = ?, bus.number_of_passengers = ? where id = ?");
+        statement.setString(1, bus.getMark());
+        statement.setInt(2, bus.getHorsePower());
+        statement.setInt(3, bus.getNumberOfPassenger());
+        statement.setInt(4, bus.getId());
+        return statement.executeUpdate();
+    }
+
     private PreparedStatement getCreateStatement(String sql, String idFieldName) throws SQLException {
         return getConnection().prepareStatement(sql, new String[]{idFieldName});
     }

@@ -34,4 +34,8 @@ public class DriverServiceImpl implements DriverService {
     public Integer getSize() throws Exception {
         return driverDao.getSize();
     }
+
+    public int update(Driver driver) throws Exception {
+        return driverDao.update(driver);
+    }
 }

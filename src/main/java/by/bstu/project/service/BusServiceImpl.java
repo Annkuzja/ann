@@ -43,4 +43,8 @@ public class BusServiceImpl implements BusService {
     public Integer getSize() throws Exception {
         return busDao.getSize();
     }
+
+    public int update(Bus bus) throws Exception {
+        return busDao.update(bus);
+    }
 }
