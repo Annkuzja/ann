@@ -67,7 +67,6 @@ public class RouteVODaoImpl implements RouteVODao {
         PreparedStatement statement = createStatement(SELECT_SQL);
         statement.setInt(1, id);
         ResultSet resultSet = statement.executeQuery();
-        List<RouteVO> routesVO = new ArrayList<RouteVO>();
         if (!resultSet.next())
             return null;
         RouteVO routeVO = new RouteVO();
